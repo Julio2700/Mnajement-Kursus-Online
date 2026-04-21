@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-import database
+import database, models.course as models
+from routers import course, lesson 
+from routers import course, lesson, auth
 
 app = FastAPI(
     title="LMS Microservice API",
@@ -7,13 +9,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Membuat tabel di database saat aplikasi dijalankan
-database.Base.metadata.create_all(bind=database.engine)
+models.Base.metadata.create_all(bind=database.engine)
+
+app.include_router(course.router)
+app.include_router(lesson.router)
+app.include_router(auth.router)
+app.include_router(course.router)
+app.include_router(lesson.router)
 
 @app.get("/")
 def read_root():
     return {"message": "Selamat Datang di API Manajemen Kursus Online, PAK BOS JULL!"}
 
-@app.get("/health")
-def health_check():
-    return {"status": "Aplikasi Berjalan Lancar"}
